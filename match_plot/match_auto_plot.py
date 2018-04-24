@@ -6,9 +6,11 @@ import requests
 match_id= input("请输入职业比赛id:\n")
 data = requests.get("https://api.opendota.com/api/matches/"+str(match_id)).json()
 
+fig = plt.figure(figsize=(14,7))#新建图像，figsize为图像大小
+
+#经济、经验差
 gold_change = pd.Series(data['radiant_gold_adv'])
 xp = pd.Series(data['radiant_xp_adv'])
-fig = plt.figure(figsize=(14,7))#新建图像，figsize为图像大小
 ax1 = fig.add_subplot(2,2,1)#添加子图，个数为1*1,第三个1为子图的索引
 gold,=ax1.plot(gold_change.index,gold_change.values,color="b")#plot画折线图，x轴为gold和xp索引，此处为比赛时间，纵轴为gold_chang和xp差值，表示带数据点
 xp,=ax1.plot(xp.index,xp.values,color="r")#在同一个子图上画经验差变化
@@ -30,26 +32,41 @@ a=la.sort_values(ascending=True)
 b=a[a.values>0]
 names = [i for i in b.index]
 haha =pd.Series(names)
-ax2.spines['top'].set_color('none')#去除上边框线3846888523
+ax2.spines['top'].set_color('none')#去除上边框线
 ax2.spines['right'].set_color('none')#去除右边框
 ax2.set_yticklabels(haha.values)
 ax2.set_yticks(haha.index)
 ax2.set_title("堆叠野怪次数")
-ax2.barh(range(len(haha.index)),b.values,color='g')#水平条形图
+ax2.barh(range(len(haha.index)),b.values,color='#c1f585')#水平条形图
+
+#选手打出的伤害
+ds = {i['name']:i['hero_damage'] for i in data['players']}
+damages = pd.Series(ds)
+ax3 = fig.add_subplot(223)
+damages=damages.sort_values(ascending=True)
+print(type(damages))
+names=pd.Series([i for i in damages.index])
+ax3.spines['top'].set_color('none')#去除上边框线
+ax3.spines['right'].set_color('none')#去除右边框
+ax3.set_yticklabels(names.values)
+ax3.set_yticks(names.index)
+ax3.set_title("英雄伤害")
+ax3.barh(names.index,damages.values,color='#309ff8')
+
 
 #选手金钱变化
 player_gold = {i['name']:i['gold_t'] for i in data['players']}
 gold_t = pd.DataFrame(player_gold)
-ax3 = fig.add_subplot(2,2,4)
+ax4 = fig.add_subplot(2,2,4)
 lines = []
-ax3.spines['top'].set_color('none')
-ax3.spines['right'].set_color('none')
+ax4.spines['top'].set_color('none')
+ax4.spines['right'].set_color('none')
 for i in range(10):
-	locals()['p{}'.format(i)], = ax3.plot(gold_t.index,gold_t[gold_t.columns[i]])#批量命名变量用到locals函数
+	locals()['p{}'.format(i)], = ax4.plot(gold_t.index,gold_t[gold_t.columns[i]])#批量命名变量用到locals函数
 	lines.append(locals()['p{}'.format(i)])
 
-ax3.set_title("{} vs {} 选手金钱变化".format(data['radiant_team']['tag'],data['dire_team']['tag']))#设置标题
-ax3.legend(handles=lines,labels=list(gold_t.columns),loc='upper left')#设置图例
+ax4.set_title("{} vs {} 选手金钱变化".format(data['radiant_team']['tag'],data['dire_team']['tag']))#设置标题
+ax4.legend(handles=lines,labels=list(gold_t.columns),loc='upper left')#设置图例
 fig.savefig('{}.png'.format(match_id))
 #plt.show()
 
