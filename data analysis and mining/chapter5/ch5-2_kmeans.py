@@ -43,8 +43,6 @@ if __name__ == "__main__":
         for i in range(4):
             if a[j].columns[i] != "Id":
                 a[j].iloc[:, i].plot(kind='kde', title="cluster{} density".format(j),ax=axes[i - 1], label=a[j].columns[i])
-        plt.ylabel("density")
-        plt.xlabel("population")
-        fig.legend()
+                axes[i - 1].legend()
         fig.show()
         fig.savefig("c{}.png".format(j))
