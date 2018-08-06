@@ -1,13 +1,13 @@
 ﻿#混淆矩阵画图
 import matplotlib.pyplot as plt  
 
-def plot_cm(y, yp):
+def plot_cm(y, yp,title):
 
     from sklearn.metrics import confusion_matrix  # 导入混淆矩阵函数
     cm = confusion_matrix(y, yp)  # 混淆矩阵
 
-    plt.matshow(cm, cmap=plt.cm.Greens)  # 画混淆矩阵图，配色风格使用cm.Greens，更多风格请参考官网。
-    #plt.colorbar()  # 颜色标签
+    plt.matshow(cm, cmap=plt.cm.Oranges)  # 画混淆矩阵图，配色风格使用cm.Greens，更多风格请参考官网。
+    plt.colorbar()  # 颜色标签
 
     for x in range(len(cm)):  # 数据标签
         for y in range(len(cm)):
@@ -16,6 +16,7 @@ def plot_cm(y, yp):
 
     plt.ylabel('True label')  # 坐标轴标签
     plt.xlabel('Predicted label')  # 坐标轴标签
+    plt.title(title)
     return plt
 
 def plot_roc(test, predict_result, label_name):
