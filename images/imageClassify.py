@@ -8,11 +8,11 @@ import scipy.ndimage
 # dimensions of our images.
 img_width, img_height = 200, 200
 
-train_data_dir = 'C:\\nums\\'
-validation_data_dir = 'C:\\nums\\'
-nb_train_samples = 540
-nb_validation_samples = 60
-epochs = 100
+train_data_dir = '/home/jay/src/butterflies/'
+validation_data_dir = '/home/jay/src/val/'
+nb_train_samples = 556
+nb_validation_samples = 70
+epochs = 500
 batch_size = 20
 
 if K.image_data_format() == 'channels_first':
@@ -37,7 +37,7 @@ model.add(Flatten())
 model.add(Dense(64))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
-model.add(Dense(2)) #6分类
+model.add(Dense(7)) #分类个数
 model.add(Activation('softmax')) #采用Softmax
 
 model.compile(loss='categorical_crossentropy', #多分类
@@ -73,3 +73,4 @@ model.fit_generator(
     epochs=epochs,
     validation_data=validation_generator,
     validation_steps=nb_validation_samples // batch_size)
+model.save('butterflies.h5')
